@@ -61,24 +61,18 @@ enum
 };
 
 ALIGN(RT_ALIGN_SIZE)
-static rt_uint8_t modbus_master_stack[ 512 ];
-static rt_uint8_t modbus_slave_stack[ 512 ];
-static rt_uint8_t monitor_slave_stack[ 512 ];
-static rt_uint8_t team_stack[ 512 ];
+static rt_uint8_t modbus_master_stack[ 512 ]; 
+static rt_uint8_t monitor_slave_stack[ 512 ]; 
 static rt_uint8_t mbm_fsm_stack[ 512 ];
 static rt_uint8_t di_stack[ 256 ];
 static rt_uint8_t daq_stack[ 512 ];
 static rt_uint8_t core_stack[ 1024 ];
-static rt_uint8_t cpad_stack[ 2048 ];
-static rt_uint8_t tcom_stack[ 512 ];
+static rt_uint8_t cpad_stack[ 2048 ]; 
 static rt_uint8_t bkg_stack[ 512 ];
 static rt_uint8_t testcase_stack[ 256 ];
 
-static struct rt_thread modbus_master_thread;
-static struct rt_thread modbus_slave_thread;
-static struct rt_thread monitor_slave_thread;
-static struct rt_thread tcom_thread;
-static struct rt_thread team_thread;
+static struct rt_thread modbus_master_thread; 
+static struct rt_thread monitor_slave_thread; 
 static struct rt_thread mbm_fsm_thread;
 static struct rt_thread di_thread;
 static struct rt_thread daq_thread;

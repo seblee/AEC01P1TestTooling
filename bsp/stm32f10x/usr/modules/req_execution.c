@@ -188,8 +188,8 @@ static void req_ao_op(uint8_t component_bpos, int16_t value, uint8_t u8Sig)
                     l_sys.ao_list[component_bpos][BITMAP_REQ] =
                         lim_min_max(g_sys.config.fan.min_speed, g_sys.config.fan.max_speed, i16Ao_list);
                 }
-                //								rt_kprintf("value = %d, BITMAP_REQ = %d, i16Ao_list = %d, u16Step = %d\n", value,
-                //l_sys.ao_list[component_bpos][BITMAP_REQ],i16Ao_list,u16Step);
+                //								rt_kprintf("value = %d, BITMAP_REQ = %d, i16Ao_list = %d, u16Step =
+                //%d\n", value, l_sys.ao_list[component_bpos][BITMAP_REQ],i16Ao_list,u16Step);
                 break;
             }
             case (AO_EC_COMPRESSOR): {
@@ -222,7 +222,7 @@ static void req_ao_op(uint8_t component_bpos, int16_t value, uint8_t u8Sig)
                     l_sys.ao_list[component_bpos][BITMAP_REQ] = value;
                 }
                 //										rt_kprintf("temp = %d, ao = %d\n", temp,
-                //l_sys.ao_list[component_bpos][BITMAP_REQ]);
+                // l_sys.ao_list[component_bpos][BITMAP_REQ]);
                 break;
             }
             default: {
@@ -309,7 +309,8 @@ static uint16_t compressor_signal_gen(int16_t req_temp, int16_t req_hum, uint8_t
                 }
                 else if (req_temp < 0)
                 //								//Alair,20170228
-                //								else if((req_temp <= 0)&&(sys_get_remap_status(WORK_MODE_STS_REG_NO,DEMHUM_STS_BPOS)
+                //								else if((req_temp <=
+                // 0)&&(sys_get_remap_status(WORK_MODE_STS_REG_NO,DEMHUM_STS_BPOS)
                 //!= 1))
                 {
                     *comp1_sig = COMPRESSOR_SIG_OFF;
@@ -328,7 +329,8 @@ static uint16_t compressor_signal_gen(int16_t req_temp, int16_t req_hum, uint8_t
                     *comp1_sig = COMPRESSOR_SIG_ON;
                     *comp2_sig = COMPRESSOR_SIG_OFF;
                 }
-                //								else if((req_temp <= 0)&&(sys_get_remap_status(WORK_MODE_STS_REG_NO,DEMHUM_STS_BPOS)
+                //								else if((req_temp <=
+                // 0)&&(sys_get_remap_status(WORK_MODE_STS_REG_NO,DEMHUM_STS_BPOS)
                 //!= 1)) 需求小于0关闭制冷,Alair,2018.01.27
                 else if ((req_temp < 0) && (sys_get_remap_status(WORK_MODE_STS_REG_NO, DEMHUM_STS_BPOS) != 1))
                 {
@@ -390,9 +392,9 @@ static uint16_t compressor_signal_gen(int16_t req_temp, int16_t req_hum, uint8_t
                         *comp1_sig = COMPRESSOR_SIG_OFF;
                         *comp2_sig = COMPRESSOR_SIG_ON;
                         //												if(((req_temp <=
-                        //0)&&(sys_get_remap_status(WORK_MODE_STS_REG_NO,DEMHUM_STS_BPOS) == 0))||
+                        // 0)&&(sys_get_remap_status(WORK_MODE_STS_REG_NO,DEMHUM_STS_BPOS) == 0))||
                         //														((comp1_alarm_flag&comp2_alarm_flag) !=
-                        //0)) 需求小于0关闭制冷,Alair,2018.01.27
+                        // 0)) 需求小于0关闭制冷,Alair,2018.01.27
                         if (((req_temp < 0) && (sys_get_remap_status(WORK_MODE_STS_REG_NO, DEMHUM_STS_BPOS) == 0)) ||
                             ((comp1_alarm_flag & comp2_alarm_flag) != 0))
                         {
@@ -462,9 +464,9 @@ static uint16_t compressor_signal_gen(int16_t req_temp, int16_t req_hum, uint8_t
                         *comp1_sig = COMPRESSOR_SIG_ON;
                         *comp2_sig = COMPRESSOR_SIG_OFF;
                         //												if(((req_temp <=
-                        //0)&&(sys_get_remap_status(WORK_MODE_STS_REG_NO,DEMHUM_STS_BPOS) == 0))||
+                        // 0)&&(sys_get_remap_status(WORK_MODE_STS_REG_NO,DEMHUM_STS_BPOS) == 0))||
                         //														((comp1_alarm_flag&comp2_alarm_flag) !=
-                        //0)) 需求小于0关闭制冷,Alair,2018.01.27
+                        // 0)) 需求小于0关闭制冷,Alair,2018.01.27
                         if (((req_temp < 0) && (sys_get_remap_status(WORK_MODE_STS_REG_NO, DEMHUM_STS_BPOS) == 0)) ||
                             ((comp1_alarm_flag & comp2_alarm_flag) != 0))
                         {
@@ -490,9 +492,9 @@ static uint16_t compressor_signal_gen(int16_t req_temp, int16_t req_hum, uint8_t
                         *comp1_sig = COMPRESSOR_SIG_OFF;
                         *comp2_sig = COMPRESSOR_SIG_ON;
                         //												if(((req_temp <=
-                        //0)&&(sys_get_remap_status(WORK_MODE_STS_REG_NO,DEMHUM_STS_BPOS) == 0))||
+                        // 0)&&(sys_get_remap_status(WORK_MODE_STS_REG_NO,DEMHUM_STS_BPOS) == 0))||
                         //														((comp1_alarm_flag&comp2_alarm_flag) !=
-                        //0)) 需求小于0关闭制冷,Alair,2018.01.27
+                        // 0)) 需求小于0关闭制冷,Alair,2018.01.27
                         if (((req_temp < 0) && (sys_get_remap_status(WORK_MODE_STS_REG_NO, DEMHUM_STS_BPOS) == 0)) ||
                             ((comp1_alarm_flag & comp2_alarm_flag) != 0))
                         {
@@ -1187,7 +1189,7 @@ static void ec_compressor_output(int16_t req_temp, uint8_t comp_sig)
 
                             local_Exhaust_max_speed = g_sys.config.compressor.speed_upper_lim;  //恢复正常输出
                             //														local_compress_max_speed =
-                            //lim_min_max(g_sys.config.compressor.speed_lower_lim,local_compress_max_speed,analog_step_follower(req_temp,AO_EC_COMPRESSOR));
+                            // lim_min_max(g_sys.config.compressor.speed_lower_lim,local_compress_max_speed,analog_step_follower(req_temp,AO_EC_COMPRESSOR));
                         }
                         else
                         {
@@ -1689,7 +1691,7 @@ void CalculateFout(uint8_t u8Exfan_ID, int16_t i16Pressure)
         }
     }
     else
-    {   //???????????,???????100%?????? 50Hz,????100?
+    {  //???????????,???????100%?????? 50Hz,????100?
         //		g_sys.status.Ex_Fan_Speed[0] = 100 ;
         g_sys.status.Ex_Fan_Speed[u8Exfan_ID] = g_sys.config.Ex_Fan.MAXSPEEDID;
     }
@@ -1745,7 +1747,7 @@ static void Ex_Fan_Ctrl(void)
             if (u8Cnt % 3 == 0)
             {
                 //							if((((g_sys.config.dev_mask.mb_comp>>MBM_DEV_EX_FAN_ADDR)&0x0001) ==
-                //1)&&(g_sys.config.Ex_Fan.FAN_TYPE))
+                // 1)&&(g_sys.config.Ex_Fan.FAN_TYPE))
                 //							{
                 //								g_i16Ex_Fan_Speed[0]=0x00;
                 //								if(g_sys.status.mbm.EX_FAN[0].Set_Speed_Mode == 1)
@@ -1775,7 +1777,7 @@ static void Ex_Fan_Ctrl(void)
     //					{
     //							g_i16Ex_Fan_Speed[1]=(int16_t)g_sys.status.Ex_Fan_Speed[1];
     //							if((((g_sys.config.dev_mask.mb_comp>>MBM_DEV_EX_FAN_ADDR)&0x0001) ==
-    //1)&&(g_sys.config.Ex_Fan.FAN_TYPE))
+    // 1)&&(g_sys.config.Ex_Fan.FAN_TYPE))
     //							{
     //								if(g_sys.status.mbm.EX_FAN[1].Set_Speed_Mode == 1)
     //								{
@@ -1800,9 +1802,9 @@ static void Ex_Fan_Ctrl(void)
     //						if(u8Cnt%7==0)
     //						{
     ////							if((((g_sys.config.dev_mask.mb_comp>>MBM_DEV_EX_FAN_ADDR)&0x0001) ==
-    ///1)&&(g_sys.config.Ex_Fan.FAN_TYPE)) /							{ /
-    ///if(g_sys.status.mbm.EX_FAN[1].Set_Speed_Mode == 1) /								{ /
-    ///mbm_send_data[1].mbm_fun_code = 6;
+    /// 1)&&(g_sys.config.Ex_Fan.FAN_TYPE)) /							{ /
+    /// if(g_sys.status.mbm.EX_FAN[1].Set_Speed_Mode == 1) /								{ /
+    /// mbm_send_data[1].mbm_fun_code = 6;
     ////										mbm_send_data[1].mbm_addr = MBM_DEV_EX_FAN2_ADDR + 1;
     ////										mbm_send_data[1].reg_addr =0x1038;
     ////										mbm_send_data[1].reg_value =g_i16Ex_Fan_Speed[1];
@@ -1870,7 +1872,7 @@ void Ex_Fan_Ctrl_Temp(void)
     return;
 }
 // compressor requirement execution
-static void compressor_req_exe(int16_t req_temp, int16_t req_hum)
+void compressor_req_exe(int16_t req_temp, int16_t req_hum)
 {
     uint8_t comp1_sig, comp2_sig;
 
@@ -2158,7 +2160,7 @@ static void watervalve_output(int16_t req_temp)
 }
 
 // water valve requirement execution
-static void watervalve_req_exe(int16_t req_temp, int16_t req_hum)
+void watervalve_req_exe(int16_t req_temp, int16_t req_hum)
 {
     uint8_t watervalve_sig;
     watervalve_signal_gen(req_temp, &watervalve_sig);
@@ -2170,7 +2172,7 @@ static void watervalve_req_exe(int16_t req_temp, int16_t req_hum)
 HEATER requirement execution function
 **************************************/
 //电加热需求执行函数
-static void heater_req_exe(int16_t req_temp, int16_t req_hum)
+void heater_req_exe(int16_t req_temp, int16_t req_hum)
 {
     extern sys_reg_st g_sys;
     extern local_reg_st l_sys;
@@ -2493,7 +2495,7 @@ void hum_capacity_calc(void)
     //			{
     //					g_sys.config.humidifier.hum_real_cap = 50;
     ////					g_sys.config.humidifier.hum_real_cap =
-    ///g_sys.config.humidifier.hum_capacity*g_sys.config.humidifier.water_conductivity/100;
+    /// g_sys.config.humidifier.hum_capacity*g_sys.config.humidifier.water_conductivity/100;
     //					break;
     //			}
     //		}
@@ -2679,8 +2681,8 @@ static void infrared_hum_fsm(uint8_t hum_sig)
                                 req_bitmap_op(DO_DRAIN_BPOS, 0);
                                 req_bitmap_op(DO_FILL_BPOS, 1);
 
-                                //																	 rt_kprintf("go to HUM_FSM_STATE_WARM=
-                                //%d\n",now);
+                                //																	 rt_kprintf("go to
+                                // HUM_FSM_STATE_WARM= %d\n",now);
                             }
                             else
                             {
@@ -2690,8 +2692,8 @@ static void infrared_hum_fsm(uint8_t hum_sig)
                                 req_bitmap_op(DO_HUM_BPOS, 0);
                                 req_bitmap_op(DO_DRAIN_BPOS, 0);
                                 req_bitmap_op(DO_FILL_BPOS, 0);
-                                //																	rt_kprintf("go to HUM_FSM_STATE_IDLE=
-                                //%d\n",now);
+                                //																	rt_kprintf("go to
+                                // HUM_FSM_STATE_IDLE= %d\n",now);
                             }
                         }
                     }
@@ -3108,8 +3110,8 @@ static void humidifier_fsm(uint8_t hum_sig, int16_t target_req_hum)
                                 req_bitmap_op(DO_DRAIN_BPOS, 0);
                                 req_bitmap_op(DO_FILL_BPOS, 1);
 
-                                //																	 rt_kprintf("go to HUM_FSM_STATE_WARM=
-                                //%d\n",now);
+                                //																	 rt_kprintf("go to
+                                // HUM_FSM_STATE_WARM= %d\n",now);
                             }
                             else
                             {
@@ -3119,8 +3121,8 @@ static void humidifier_fsm(uint8_t hum_sig, int16_t target_req_hum)
                                 req_bitmap_op(DO_HUM_BPOS, 0);
                                 req_bitmap_op(DO_DRAIN_BPOS, 0);
                                 req_bitmap_op(DO_FILL_BPOS, 0);
-                                //																	rt_kprintf("go to HUM_FSM_STATE_IDLE=
-                                //%d\n",now);
+                                //																	rt_kprintf("go to
+                                // HUM_FSM_STATE_IDLE= %d\n",now);
                             }
                         }
                     }
@@ -3353,7 +3355,7 @@ static void Other_Hum_Fsm(uint8_t Hum_Sig)
     return;
 }
 
-static void humidifier_req_exe(int16_t target_req_hum)
+void humidifier_req_exe(int16_t target_req_hum)
 {
     extern sys_reg_st g_sys;
     uint8_t hum_sig;
@@ -3394,7 +3396,7 @@ static void MBM_Send(uint16_t Addr, uint16_t Value)
     rt_thread_delay(1000);
 }
 //除湿阀输出反向
-static void DO_Bitmap_Rev(uint8_t component_bpos, uint8_t u8Rev)
+void DO_Bitmap_Rev(uint8_t component_bpos, uint8_t u8Rev)
 {
     if (u8Rev)
     {
@@ -3410,7 +3412,7 @@ static void DO_Bitmap_Rev(uint8_t component_bpos, uint8_t u8Rev)
 DEHUMER requirement execution function
 **************************************/
 //除湿逻辑执行函数
-static void dehumer_req_exe(int16_t req_temp, int16_t req_hum)
+void dehumer_req_exe(int16_t req_temp, int16_t req_hum)
 {
     extern sys_reg_st g_sys;
     extern local_reg_st l_sys;
@@ -3633,7 +3635,7 @@ static uint8_t fan_signal_gen(void)
     //				}
     //		}
     //		else if((sys_get_pwr_sts() ==
-    //0)&&((g_sys.status.dout_bitmap&(~((0x0001<<DO_FAN_BPOS)|(0x0001<<DO_ALARM_BPOS)|(0x0001<<DO_PHASE_P_BPOS)|(0x0001<<DO_PHASE_N_BPOS)|(0x0001<<DO_DEHUM1_BPOS))))
+    // 0)&&((g_sys.status.dout_bitmap&(~((0x0001<<DO_FAN_BPOS)|(0x0001<<DO_ALARM_BPOS)|(0x0001<<DO_PHASE_P_BPOS)|(0x0001<<DO_PHASE_N_BPOS)|(0x0001<<DO_DEHUM1_BPOS))))
     //== 0)&&(ao_sig_flag == 0)) Alair 20161113
     else if (sys_get_pwr_sts() == 0)
     {
@@ -3731,7 +3733,7 @@ static void fan_fsm_exe(uint8_t fan_signal)
                     l_sys.l_fsm_state[FAN_FSM_STATE] = FSM_FAN_START_UP;
                     l_sys.comp_timeout[DO_FAN_BPOS]  = g_sys.config.fan.cold_start_delay;
                     //										req_bitmap_op(DO_FAN_BPOS,1);				//enable fan
-                    //output
+                    // output
                     l_sys.Fan.Fan_Gear = FAN_GEAR_START;  //
                 }
                 else  // wait until startup delay elapses
@@ -3782,8 +3784,8 @@ static void fan_fsm_exe(uint8_t fan_signal)
             if (fan_signal == FAN_SIG_START)
             {
                 l_sys.l_fsm_state[FAN_FSM_STATE] = FSM_FAN_NORM;
-                //								req_bitmap_op(DO_FAN_BPOS,1);																					//disable fan
-                //output
+                //								req_bitmap_op(DO_FAN_BPOS,1);
+                ////disable fan output
                 l_sys.Fan.Fan_Gear              = FAN_GEAR_START;                   //
                 l_sys.comp_timeout[DO_FAN_BPOS] = l_sys.comp_timeout[DO_FAN_BPOS];  // reset timeout counter
             }
@@ -3792,15 +3794,16 @@ static void fan_fsm_exe(uint8_t fan_signal)
                 if (l_sys.comp_timeout[DO_FAN_BPOS] == 0)
                 {
                     l_sys.l_fsm_state[FAN_FSM_STATE] = FSM_FAN_IDLE;
-                    l_sys.Fan.Fan_Gear               = FAN_GEAR_NO;                     //																			//enable
-                                                                                        //fan output
+                    l_sys.Fan.Fan_Gear =
+                        FAN_GEAR_NO;                                                    //																			//enable
+                                                                                        // fan output
                     l_sys.comp_timeout[DO_FAN_BPOS] = l_sys.comp_timeout[DO_FAN_BPOS];  // reset timeout counter
                 }
                 else  // wait until startup delay elapses
                 {
                     l_sys.l_fsm_state[FAN_FSM_STATE] = FSM_FAN_SHUT;
-                    //										req_bitmap_op(DO_FAN_BPOS,1);																			//enable
-                    //fan output
+                    //										req_bitmap_op(DO_FAN_BPOS,1);
+                    ////enable fan output
                     l_sys.comp_timeout[DO_FAN_BPOS] = l_sys.comp_timeout[DO_FAN_BPOS];  // remain timeout counter
                 }
             }
@@ -3808,8 +3811,8 @@ static void fan_fsm_exe(uint8_t fan_signal)
         }
         default: {
             l_sys.l_fsm_state[FAN_FSM_STATE] = FSM_FAN_IDLE;
-            //						req_bitmap_op(DO_FAN_BPOS,0);																							//enable fan
-            //output
+            //						req_bitmap_op(DO_FAN_BPOS,0);
+            ////enable fan output
             l_sys.Fan.Fan_Gear              = FAN_GEAR_NO;  //
             l_sys.comp_timeout[DO_FAN_BPOS] = 0;            // reset timeout counter
             break;
@@ -3856,7 +3859,7 @@ static int16_t ecfan_default_cacl_output(int16_t req_temp)
 
     return (req_temp);
 }
-static uint16_t ec_fan_adjust(uint16_t fan_require)
+uint16_t ec_fan_adjust(uint16_t fan_require)
 {
     extern sys_reg_st g_sys;
 
@@ -4015,7 +4018,8 @@ static void ec_fan_output(int16_t req_temp, int16_t req_hum, int16_t fan_req, ui
                         if (sys_get_remap_status(WORK_MODE_STS_REG_NO, DEMHUM_STS_BPOS) != 0)
                         {
                             //														require = analog_step_follower(1,
-                            //AO_INV_FAN); 														ec_fan_shut_delay = EC_FAN_NOLOAD_DELAY; Alair，20170816
+                            // AO_INV_FAN); 														ec_fan_shut_delay =
+                            // EC_FAN_NOLOAD_DELAY; Alair，20170816
                             require = g_sys.config.fan.set_speed * g_sys.config.fan.dehum_ratio / 100;
                         }
                         else if ((sys_get_remap_status(WORK_MODE_STS_REG_NO, HEATING_STS_BPOS) != 0) ||
@@ -4043,7 +4047,7 @@ static void ec_fan_output(int16_t req_temp, int16_t req_hum, int16_t fan_req, ui
                         {
                             // Alair,20171011,修改压机1关机后，风机最低转速运行的bug
                             //													require =
-                            //analog_step_follower(0,AO_INV_FAN);
+                            // analog_step_follower(0,AO_INV_FAN);
                             if ((g_sys.status.dout_bitmap & (0x0001 << DO_COMP1_BPOS)) == 0)
                             {
                                 require = analog_step_follower(fan_req, AO_EC_FAN);
@@ -4195,7 +4199,7 @@ static void ec_fan_output(int16_t req_temp, int16_t req_hum, int16_t fan_req, ui
  * @retval none
  */
 //风机需求执行函数
-static void fan_req_exe(int16_t target_req_temp, int16_t target_req_hum, int16_t fan_req)
+void fan_req_exe(int16_t target_req_temp, int16_t target_req_hum, int16_t fan_req)
 {
     uint8_t fan_signal;
     fan_signal = fan_signal_gen();                                        //风机状态机信号产生
@@ -4304,10 +4308,10 @@ enum
 //		//机型判断
 //		extern sys_reg_st		g_sys;
 ////		if((g_sys.config.general.cool_type == COOL_TYPE_COLUMN_WATER)|| ((g_sys.config.general.cool_type ==
-///COOL_TYPE_COLUMN_WIND) && (g_sys.config.compressor.type != COMP_QABP)) )
+/// COOL_TYPE_COLUMN_WIND) && (g_sys.config.compressor.type != COMP_QABP)) )
 //		//Alair,20170227
 //		if((g_sys.config.general.cool_type == COOL_TYPE_COLUMN_WATER)|| (g_sys.config.general.cool_type ==
-//COOL_TYPE_COLUMN_WIND) )
+// COOL_TYPE_COLUMN_WIND) )
 //		{
 //				// 高水位和低水位检测都触发
 //				if((sys_get_di_sts(DI_COND_HI_LEVEL_BPOS)==1)&&(sys_get_di_sts(DI_COND_LO_LEVEL_BPOS)==1))
@@ -4342,7 +4346,7 @@ enum
 //		{
 //			if(((g_sys.config.dev_mask.dout & ((0x0001)<<DO_HGBP_BPOS)) != 0)&&
 //					((g_sys.config.general.cool_type == COOL_TYPE_COLUMN_WIND)||(g_sys.config.general.cool_type ==
-//COOL_TYPE_MODULE_WIND)))
+// COOL_TYPE_MODULE_WIND)))
 //			{
 //					switch(fsm_hgbp_state)
 //					{
@@ -4375,7 +4379,8 @@ enum
 //							{
 //									if((sys_get_remap_status(WORK_MODE_STS_REG_NO,COOLING_STS_BPOS) == 0)||
 //											(target_req_temp >
-//(g_sys.config.hgbp.on_req+g_sys.config.hgbp.hysterisis))|| 											(target_req_temp <= 0)|| 											(hgbp_cd == 0))
+//(g_sys.config.hgbp.on_req+g_sys.config.hgbp.hysterisis))|| 											(target_req_temp
+//<= 0)|| (hgbp_cd == 0))
 //									{
 //											req_bitmap_op(DO_HGBP_BPOS,0);
 //											hgbp_cd = g_sys.config.hgbp.min_off_time;
@@ -4445,10 +4450,11 @@ enum
 //(g_sys.status.ain[AI_HI_PRESS_CONDENSATE] >= g_sys.config.ext_fan_inst.ext_fan_min_press))
 //				{
 //					k = (g_sys.config.ext_fan_inst.ext_fan_max_press -
-//g_sys.config.ext_fan_inst.ext_fan_min_press)/(g_sys.config.ext_fan_inst.ext_fan1_set_speed -
-//g_sys.config.ext_fan_inst.ext_fan_min_speed); 					b = g_sys.config.ext_fan_inst.ext_fan_max_press -
-//k*(g_sys.config.ext_fan_inst.ext_fan1_set_speed); 					ext_fan_out = (g_sys.status.ain[AI_HI_PRESS_CONDENSATE] - b)/k;
-//					if(ext_fan_out < g_sys.config.ext_fan_inst.ext_fan_min_speed)
+// g_sys.config.ext_fan_inst.ext_fan_min_press)/(g_sys.config.ext_fan_inst.ext_fan1_set_speed -
+// g_sys.config.ext_fan_inst.ext_fan_min_speed); 					b = g_sys.config.ext_fan_inst.ext_fan_max_press -
+// k*(g_sys.config.ext_fan_inst.ext_fan1_set_speed); 					ext_fan_out =
+// (g_sys.status.ain[AI_HI_PRESS_CONDENSATE]
+// - b)/k; 					if(ext_fan_out < g_sys.config.ext_fan_inst.ext_fan_min_speed)
 //					{
 //						ext_fan_out = g_sys.config.ext_fan_inst.ext_fan_min_speed;
 //					}
@@ -4531,7 +4537,8 @@ void req_execution(int16_t target_req_temp, int16_t target_req_hum, int16_t targ
     extern sys_reg_st g_sys;
     extern local_reg_st l_sys;
     uint8_t ICT_fsm_state;
-    uint16_t ICT_test = 0;
+    static uint16_t ICT_test = 0;
+    static uint16_t ICTStep  = 0;
 
     GetPowerKeyDI();
     if (l_sys.u8ICT_PowerKey == FALSE)  //上电
@@ -4549,16 +4556,30 @@ void req_execution(int16_t target_req_temp, int16_t target_req_hum, int16_t targ
                 g_sys.status.ICT.u16Fsm    = ICT_ST_START;
                 l_sys.u8ICT_Delay          = 25;
                 l_sys.u8ICT_Start          = TRUE;
-                req_bitmap_op(DO_POWER_DC5V_BPOS, 1);
-                req_bitmap_op(DO_POWER_AC24V_BPOS, 1);
+
+                req_bitmap_op(DO_HUM_BPOS, 0);    // 1
+                req_bitmap_op(DO_FILL_BPOS, 0);   // 2
+                req_bitmap_op(DO_DRAIN_BPOS, 0);  // 3
+
+                req_bitmap_op(DO_PHASE_N_BPOS, 0);  // 6
+                req_bitmap_op(DO_COMP1_BPOS, 0);    // 7
+                req_bitmap_op(DO_COMP2_BPOS, 1);    // 8
+
+                ICT_test = 0;
+                ICTStep  = 0;
+
                 g_sys.status.ICT.u16Test = 0;
             }
             else
             {
                 g_sys.status.ICT.u16Status = ICT_IDLE;
-                req_bitmap_op(DO_POWER_DC5V_BPOS, 0);
-                req_bitmap_op(DO_POWER_AC24V_BPOS, 0);
-                req_bitmap_op(DO_ALARM_BPOS, 0);
+                req_bitmap_op(DO_HUM_BPOS, 0);    // 1
+                req_bitmap_op(DO_FILL_BPOS, 0);   // 2
+                req_bitmap_op(DO_DRAIN_BPOS, 0);  // 3
+
+                req_bitmap_op(DO_PHASE_N_BPOS, 0);  // 6
+                req_bitmap_op(DO_COMP1_BPOS, 0);    // 7
+                req_bitmap_op(DO_COMP2_BPOS, 0);    // 8
             }
         }
         break;
@@ -4574,53 +4595,68 @@ void req_execution(int16_t target_req_temp, int16_t target_req_hum, int16_t targ
         }
         break;
         case ICT_TEST: {
-            ICT_test = 0;
-            if ((abs(g_sys.status.mbm.pwr[0].pa_volt - g_sys.status.mbm.pwr[1].pa_volt) > ICT_V_MAX) ||
-                (g_sys.status.mbm.pwr[1].pa_volt < 5))
+            if ((ICTStep & 0x0001) == 0)
             {
-                ICT_test |= 0x01;
+                if ((sys_get_di_sts(DI_HI_PRESS1_BPOS) != 0) && (sys_get_di_sts(DI_LO_PRESS1_BPOS) != 0))
+                {
+                    ICT_test |= 0x0001;
+                }
+                ICTStep |= 0x0001;
+                req_bitmap_op(DO_HUM_BPOS, 1);  // 1
+                break;
+            }
+            if ((ICTStep & 0x0002) == 0)
+            {
+                if (g_sys.status.ain[AI_HI_PRESS_SENSOR1] != 0)
+                {
+                    ICT_test |= 0x0002;
+                }
+                ICTStep |= 0x0002;
+                req_bitmap_op(DO_COMP1_BPOS, 1);  // 7
+                break;
+            }
+            if ((ICTStep & 0x0004) == 0)
+            {
+                if ((sys_get_di_sts(DI_HI_PRESS1_BPOS) == 0) || (sys_get_di_sts(DI_LO_PRESS1_BPOS) == 0))
+                {
+                    ICT_test |= 0x0004;
+                }
+                ICTStep |= 0x0004;
+                req_bitmap_op(DO_PHASE_N_BPOS, 1);  // 6
+                break;
             }
 
-            if ((abs(g_sys.status.mbm.pwr[0].pb_volt - g_sys.status.mbm.pwr[1].pb_volt) > ICT_V_MAX) ||
-                (g_sys.status.mbm.pwr[1].pb_volt < 5))
+            if ((ICTStep & 0x0008) == 0)
             {
-                ICT_test |= 0x02;
+                if (g_sys.status.ain[AI_HI_PRESS_SENSOR1] == 0)  // 24V
+                {
+                    ICT_test |= 0x0008;
+                }
+                ICTStep |= 0x0008;
+                req_bitmap_op(DO_FILL_BPOS, 1);  // 2
+                break;
             }
 
-            if ((abs(g_sys.status.mbm.pwr[0].pc_volt - g_sys.status.mbm.pwr[1].pc_volt) > ICT_V_MAX) ||
-                (g_sys.status.mbm.pwr[1].pc_volt < 5))
+            if ((ICTStep & 0x0010) == 0)
             {
-                ICT_test |= 0x04;
+                if (g_sys.status.ain[AI_HI_PRESS_SENSOR1] == 0)  // 12V
+                {
+                    ICT_test |= 0x0010;
+                }
+                ICTStep |= 0x0010;
+                req_bitmap_op(DO_DRAIN_BPOS, 1);  // 3
+                break;
+            }
+            if ((ICTStep & 0x0020) == 0)
+            {
+                if (g_sys.status.ain[AI_HI_PRESS_SENSOR1] == 0)  // 12V
+                {
+                    ICT_test |= 0x0020;
+                }
+                ICTStep |= 0x0020;
+                break;
             }
 
-            if ((abs(g_sys.status.mbm.pwr[0].p_cur[0] - g_sys.status.mbm.pwr[1].p_cur[0]) > ICT_V_MAX) ||
-                (g_sys.status.mbm.pwr[1].p_cur[0] < 5))
-            {
-                ICT_test |= 0x10;
-            }
-
-            if ((abs(g_sys.status.mbm.pwr[0].p_cur[0] - g_sys.status.mbm.pwr[1].p_cur[1]) > ICT_V_MAX) ||
-                (g_sys.status.mbm.pwr[1].p_cur[1] < 5))
-            {
-                ICT_test |= 0x20;
-            }
-
-            if ((abs(g_sys.status.mbm.pwr[0].p_cur[2] - g_sys.status.mbm.pwr[1].p_cur[2]) > ICT_V_MAX) ||
-                (g_sys.status.mbm.pwr[1].p_cur[2] < 5))
-            {
-                ICT_test |= 0x40;
-            }
-
-            if ((abs(g_sys.status.mbm.pwr[0].freq - g_sys.status.mbm.pwr[1].freq) > ICT_V_MAX) ||
-                (g_sys.status.mbm.pwr[1].freq < 5))
-            {
-                ICT_test |= 0x100;
-            }
-
-            if ((g_sys.status.mbm.pwr[0].dev_sts & 0x0001) != (g_sys.status.mbm.pwr[1].dev_sts & 0x0001))
-            {
-                ICT_test |= 0x200;
-            }
             if (ICT_test)
             {
                 req_bitmap_op(DO_ALARM_BPOS, 1);
@@ -4638,9 +4674,6 @@ void req_execution(int16_t target_req_temp, int16_t target_req_hum, int16_t targ
                        g_sys.status.mbm.pwr[0].pa_volt, g_sys.status.mbm.pwr[1].pa_volt,
                        g_sys.status.mbm.pwr[0].p_cur[0], g_sys.status.mbm.pwr[1].p_cur[0],
                        g_sys.status.mbm.pwr[1].p_cur[1], ICT_test);
-            rt_kprintf("din_bitmap[0] =%x,din_bitmap[1] =%x,l_sys.u8ICT_PowerKey =%x,u16Status =%x,u16Test =%x\n",
-                       g_sys.status.din_bitmap[0], g_sys.status.din_bitmap[1], l_sys.u8ICT_PowerKey,
-                       g_sys.status.ICT.u16Status, g_sys.status.ICT.u16Test);
         }
         break;
         case ICT_STOP: {
