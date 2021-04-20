@@ -1300,6 +1300,11 @@ typedef struct
     uint16_t u16Status;
     uint16_t u16Test;
     uint16_t u16Fsm;
+
+    uint16_t PG1_PG2;  // 2
+    uint16_t PUMP;     // 2
+    uint16_t P2;       // 2
+    uint16_t P3;       // 2
 } ICT_st;
 
 typedef struct

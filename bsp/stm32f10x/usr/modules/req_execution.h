@@ -2,64 +2,58 @@
 #define __REQ_EXE_H__
 #include "stdint.h"
 
-#define HUM_CURRENT_UNIT                  1.19
+#define HUM_CURRENT_UNIT 1.19
 enum
 {
-		HUM_FSM_STATE_IDLE = 0,
-		HUM_FSM_STATE_CHECK,
-		HUM_FSM_STATE_WARM,
-		HUM_FSM_STATE_DRAIN,//排水
-		HUM_FSM_STATE_HUM,//加湿
-		HUM_FSM_STATE_FILL,//注水
-		HUM_FSM_STATE_FLUSH,//冲刷换水
-		HUM_FSM_STARTCHECK_FILL,//上电检测注水	
-		HUM_FSM_STARTCHECK_DRAIN,//上电检测排水	
+    HUM_FSM_STATE_IDLE = 0,
+    HUM_FSM_STATE_CHECK,
+    HUM_FSM_STATE_WARM,
+    HUM_FSM_STATE_DRAIN,       //排水
+    HUM_FSM_STATE_HUM,         //加湿
+    HUM_FSM_STATE_FILL,        //注水
+    HUM_FSM_STATE_FLUSH,       //冲刷换水
+    HUM_FSM_STARTCHECK_FILL,   //上电检测注水
+    HUM_FSM_STARTCHECK_DRAIN,  //上电检测排水
 };
 
 enum
 {
-		HUM_TYPE_FIX,
-		HUM_TYPE_P,
-		HUM_TYPE_INFRARED,//红外加湿
-		HUM_TYPE_OTHER,//外置加湿器
+    HUM_TYPE_FIX,
+    HUM_TYPE_P,
+    HUM_TYPE_INFRARED,  //红外加湿
+    HUM_TYPE_OTHER,     //外置加湿器
 };
-
-
-
-
-
 
 enum
 {
-		COMPRESSOR_FSM_STATE_IDLE=0,
-		COMPRESSOR_FSM_STATE_INIT,
-		COMPRESSOR_FSM_STATE_STARTUP,
-		COMPRESSOR_FSM_STATE_NORMAL,
-		COMPRESSOR_FSM_STATE_SHUTING,
-		COMPRESSOR_FSM_STATE_STOP,
+    COMPRESSOR_FSM_STATE_IDLE = 0,
+    COMPRESSOR_FSM_STATE_INIT,
+    COMPRESSOR_FSM_STATE_STARTUP,
+    COMPRESSOR_FSM_STATE_NORMAL,
+    COMPRESSOR_FSM_STATE_SHUTING,
+    COMPRESSOR_FSM_STATE_STOP,
 };
 
-//EV状态机
+// EV状态机
 enum
 {
-		EV_FSM_STATE_IDLE=0,
-		EV_FSM_STATE_INIT,
-		EV_FSM_STATE_STARTUP,
-		EV_FSM_STATE_NORMAL,
-		EV_FSM_STATE_SHUTING,
-		EV_FSM_STATE_STOP,
+    EV_FSM_STATE_IDLE = 0,
+    EV_FSM_STATE_INIT,
+    EV_FSM_STATE_STARTUP,
+    EV_FSM_STATE_NORMAL,
+    EV_FSM_STATE_SHUTING,
+    EV_FSM_STATE_STOP,
 };
 
 //风机状态机
 enum
 {
-		FSM_FAN_IDLE=0,
-		FSM_FAN_INIT,
-		FSM_FAN_START_UP,
-		FSM_FAN_NORM,
-		FSM_FAN_SHUT
+    FSM_FAN_IDLE = 0,
+    FSM_FAN_INIT,
+    FSM_FAN_START_UP,
+    FSM_FAN_NORM,
+    FSM_FAN_SHUT
 };
-
 
 enum
 {
@@ -70,41 +64,67 @@ enum
     WATERVALVE_FSM_STATE_NORMAL,
     WATERVALVE_FSM_STATE_SHUTING,
 };
-//ICT
+// ICT
 enum
 {
-		ICT_IDLE=0,
-		ICT_START,
-		ICT_TEST,//
-		ICT_STOP,//
+    ICT_IDLE = 0,
+    ICT_START,
+    ICT_TEST,  //
+    ICT_STOP,  //
 };
-#define ICT_V_MAX   20
-#define ICT_I_MAX   20
+#define ICT_V_MAX 20
+#define ICT_I_MAX 20
 
 enum
 {
-		ICT_ST_NO=0,
-		ICT_ST_START,
-		ICT_ST_OK,//
-		ICT_ST_ERR,//
+    ICT_ST_NO = 0,
+    ICT_ST_START,
+    ICT_ST_OK,   //
+    ICT_ST_ERR,  //
 };
+
+typedef struct
+{
+    unsigned short b0 : 1;
+    unsigned short b1 : 1;
+    unsigned short b2 : 1;
+    unsigned short b3 : 1;
+    unsigned short b4 : 1;
+    unsigned short b5 : 1;
+    unsigned short b6 : 1;
+    unsigned short b7 : 1;
+    unsigned short b8 : 1;
+    unsigned short b9 : 1;
+    unsigned short b10 : 1;
+    unsigned short b11 : 1;
+    unsigned short b12 : 1;
+    unsigned short b13 : 1;
+    unsigned short b14 : 1;
+    unsigned short b15 : 1;
+} _FLAG_bits;
+
+typedef union
+{
+    _FLAG_bits bits;
+    unsigned char byte[2];
+    unsigned short word;
+} _TKS_FLAGA_type;
 
 enum
 {
-		FAN_MODE_FIX=0,//定速模式
-		FAN_MODE_PRESS_DIFF,//压差模式
-		FAN_MODE_AVR_RETURN,//回风平均
-		FAN_MODE_AVR_SUPPLY,//送风平均
-  	FAN_MODE_TEMP_DIFF,//温差平均
-		FAN_MODE_MAX_RETURN,//回风热点
-		FAN_MODE_MAX_SUPPLY,//送风热点
-		FAN_MODE_TEMP_MAX_DIFF,//温差热点
-    FAM_MODE_INV_COMP,//变频跟踪
+    FAN_MODE_FIX = 0,        //定速模式
+    FAN_MODE_PRESS_DIFF,     //压差模式
+    FAN_MODE_AVR_RETURN,     //回风平均
+    FAN_MODE_AVR_SUPPLY,     //送风平均
+    FAN_MODE_TEMP_DIFF,      //温差平均
+    FAN_MODE_MAX_RETURN,     //回风热点
+    FAN_MODE_MAX_SUPPLY,     //送风热点
+    FAN_MODE_TEMP_MAX_DIFF,  //温差热点
+    FAM_MODE_INV_COMP,       //变频跟踪
 };
 void hum_capacity_calc(void);
-void req_execution(int16_t target_req_temp,int16_t target_req_hum,int16_t target_req_fan);
+void req_execution(int16_t target_req_temp, int16_t target_req_hum, int16_t target_req_fan);
 void req_bitmap_op(uint8_t component_bpos, uint8_t action);
 int16_t get_inv_comp_freq_down_signal(uint8_t Type);
 void Ex_Fan_Ctrl_Temp(void);
-#endif //__REQ_EXE_H__
-
+#endif  //__REQ_EXE_H__

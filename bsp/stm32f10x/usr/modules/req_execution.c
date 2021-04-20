@@ -4531,6 +4531,7 @@ void GetPowerKeyDI(void)
     }
 }
 
+#include <stdio.h>
 //总体需求执行逻辑
 void req_execution(int16_t target_req_temp, int16_t target_req_hum, int16_t target_req_fan)
 {
@@ -4554,16 +4555,17 @@ void req_execution(int16_t target_req_temp, int16_t target_req_hum, int16_t targ
             {
                 g_sys.status.ICT.u16Status = ICT_START;
                 g_sys.status.ICT.u16Fsm    = ICT_ST_START;
-                l_sys.u8ICT_Delay          = 25;
+                l_sys.u8ICT_Delay          = 10;
                 l_sys.u8ICT_Start          = TRUE;
-
-                req_bitmap_op(DO_HUM_BPOS, 0);    // 1
+                rt_kprintf("ICT_START\n");
+                // req_bitmap_op(DO_HUM_BPOS, 0);    // 1
+                req_bitmap_op(DO_HUM_BPOS, 1);    // 1
                 req_bitmap_op(DO_FILL_BPOS, 0);   // 2
                 req_bitmap_op(DO_DRAIN_BPOS, 0);  // 3
 
-                req_bitmap_op(DO_PHASE_N_BPOS, 0);  // 6
-                req_bitmap_op(DO_COMP1_BPOS, 0);    // 7
-                req_bitmap_op(DO_COMP2_BPOS, 1);    // 8
+                req_bitmap_op(DO_COMP1_BPOS, 0);  // 6
+                req_bitmap_op(DO_FAN_BPOS, 0);    // 7
+                req_bitmap_op(DO_ALARM_BPOS, 1);  // 8
 
                 ICT_test = 0;
                 ICTStep  = 0;
@@ -4572,14 +4574,15 @@ void req_execution(int16_t target_req_temp, int16_t target_req_hum, int16_t targ
             }
             else
             {
+                // rt_kprintf("ICT_Stop\n");
                 g_sys.status.ICT.u16Status = ICT_IDLE;
                 req_bitmap_op(DO_HUM_BPOS, 0);    // 1
                 req_bitmap_op(DO_FILL_BPOS, 0);   // 2
                 req_bitmap_op(DO_DRAIN_BPOS, 0);  // 3
 
-                req_bitmap_op(DO_PHASE_N_BPOS, 0);  // 6
-                req_bitmap_op(DO_COMP1_BPOS, 0);    // 7
-                req_bitmap_op(DO_COMP2_BPOS, 0);    // 8
+                req_bitmap_op(DO_COMP1_BPOS, 0);  // 6
+                req_bitmap_op(DO_FAN_BPOS, 0);    // 7
+                req_bitmap_op(DO_ALARM_BPOS, 0);  // 8
             }
         }
         break;
@@ -4590,66 +4593,139 @@ void req_execution(int16_t target_req_temp, int16_t target_req_hum, int16_t targ
             }
             else
             {
+                g_sys.status.ICT.u16Test   = 0;
+                g_sys.status.ICT.PG1_PG2   = 0;
+                g_sys.status.ICT.PUMP      = 0;
+                g_sys.status.ICT.P2        = 0;
+                g_sys.status.ICT.P3        = 0;
+                l_sys.u8ICT_Delay          = 3;  // wait AI ready
                 g_sys.status.ICT.u16Status = ICT_TEST;
             }
         }
         break;
         case ICT_TEST: {
+            if (l_sys.u8ICT_Delay)
+            {
+                l_sys.u8ICT_Delay--;
+                break;
+            }
             if ((ICTStep & 0x0001) == 0)
             {
-                if ((sys_get_di_sts(DI_HI_PRESS1_BPOS) != 0) && (sys_get_di_sts(DI_LO_PRESS1_BPOS) != 0))
+                rt_kprintf("ICTStep & 0x0001 din_bitmap:%04x\n", g_sys.status.din_bitmap[1]);
+                if ((g_sys.status.din_bitmap[1] & 0x04) == 0)
                 {
+                    g_sys.status.ICT.PG1_PG2 &= ~0x0001;
                     ICT_test |= 0x0001;
                 }
+                else
+                {
+                    g_sys.status.ICT.PG1_PG2 |= 0x0001;
+                }
+
+                if ((g_sys.status.din_bitmap[1] & 0x08) == 0)
+                {
+                    g_sys.status.ICT.PG1_PG2 &= ~0x0100;
+                    ICT_test |= 0x0100;
+                }
+                else
+                {
+                    g_sys.status.ICT.PG1_PG2 |= 0x0100;
+                }
+
                 ICTStep |= 0x0001;
-                req_bitmap_op(DO_HUM_BPOS, 1);  // 1
-                break;
+                req_bitmap_op(DO_FAN_BPOS, 1);  // 7
+                goto LINE2;
             }
             if ((ICTStep & 0x0002) == 0)
             {
-                if (g_sys.status.ain[AI_HI_PRESS_SENSOR1] != 0)
+                rt_kprintf("ICTStep & 0x0002 din_bitmap:%04x\n", g_sys.status.din_bitmap[1]);
+                if (g_sys.status.din_bitmap[1] & 0x04)
                 {
+                    g_sys.status.ICT.PG1_PG2 &= ~0x0002;
                     ICT_test |= 0x0002;
                 }
+                else
+                {
+                    g_sys.status.ICT.PG1_PG2 |= 0x0002;
+                }
+
+                if (g_sys.status.din_bitmap[1] & 0x08)
+                {
+                    g_sys.status.ICT.PG1_PG2 &= ~0x0200;
+                    ICT_test |= 0x0200;
+                }
+                else
+                {
+                    g_sys.status.ICT.PG1_PG2 |= 0x0200;
+                }
+
                 ICTStep |= 0x0002;
-                req_bitmap_op(DO_COMP1_BPOS, 1);  // 7
-                break;
+                goto LINE2;
             }
+        LINE2:
             if ((ICTStep & 0x0004) == 0)
             {
-                if ((sys_get_di_sts(DI_HI_PRESS1_BPOS) == 0) || (sys_get_di_sts(DI_LO_PRESS1_BPOS) == 0))
+                char buuff[256];
+                sprintf(buuff, "ICTStep & 0x0004 AI:%d  v:%.04fv\n", g_sys.status.ain[AI_SENSOR1],
+                        (float)(g_sys.status.ain[AI_SENSOR1] * 3.3 * 20.2 / 2.49 / 4095));
+                rt_kprintf("%s", buuff);
+
+                if (g_sys.status.ain[AI_SENSOR1] > 125)
                 {
                     ICT_test |= 0x0004;
                 }
+                req_bitmap_op(DO_COMP1_BPOS, 1);  // 6
                 ICTStep |= 0x0004;
-                req_bitmap_op(DO_PHASE_N_BPOS, 1);  // 6
+                l_sys.u8ICT_Delay = 6;  // wait AI ready
                 break;
             }
 
             if ((ICTStep & 0x0008) == 0)
             {
-                if (g_sys.status.ain[AI_HI_PRESS_SENSOR1] == 0)  // 24V
+                char buuff[256];
+                sprintf(buuff, "ICTStep & 0x0008 AI:%d  v:%.04fv\n", g_sys.status.ain[AI_SENSOR1],
+                        (float)(g_sys.status.ain[AI_SENSOR1] * 3.3 * 20.2 / 2.49 / 4095));
+                rt_kprintf("%s", buuff);
+                g_sys.status.ICT.PUMP = g_sys.status.ain[AI_SENSOR1] * 3.3 * 20.2 * 100 / 2.49 / 4095;
+                if (abs(g_sys.status.ain[AI_SENSOR1] - 3670) > 125)  // PUMP 24V
                 {
                     ICT_test |= 0x0008;
                 }
                 ICTStep |= 0x0008;
-                req_bitmap_op(DO_FILL_BPOS, 1);  // 2
+                l_sys.u8ICT_Delay = 3;  // wait AI ready
+
+                req_bitmap_op(DO_HUM_BPOS, 0);    // 1
+                req_bitmap_op(DO_FILL_BPOS, 1);   // 2
+                req_bitmap_op(DO_DRAIN_BPOS, 0);  // 3
                 break;
             }
 
             if ((ICTStep & 0x0010) == 0)
             {
-                if (g_sys.status.ain[AI_HI_PRESS_SENSOR1] == 0)  // 12V
+                char buuff[256];
+                sprintf(buuff, "ICTStep & 0x0010 AI:%d  v:%.04fv\n", g_sys.status.ain[AI_SENSOR1],
+                        (float)(g_sys.status.ain[AI_SENSOR1] * 3.3 * 20.2 / 2.49 / 4095));
+                rt_kprintf("%s", buuff);
+                g_sys.status.ICT.P2 = g_sys.status.ain[AI_SENSOR1] * 3.3 * 20.2 * 100 / 2.49 / 4095;
+                if (abs(g_sys.status.ain[AI_SENSOR1] - 1835) > 125)  // 12V P2
                 {
                     ICT_test |= 0x0010;
                 }
                 ICTStep |= 0x0010;
+                l_sys.u8ICT_Delay = 3;            // wait AI ready
+                req_bitmap_op(DO_HUM_BPOS, 0);    // 1
+                req_bitmap_op(DO_FILL_BPOS, 0);   // 2
                 req_bitmap_op(DO_DRAIN_BPOS, 1);  // 3
                 break;
             }
             if ((ICTStep & 0x0020) == 0)
             {
-                if (g_sys.status.ain[AI_HI_PRESS_SENSOR1] == 0)  // 12V
+                char buuff[256];
+                sprintf(buuff, "ICTStep & 0x0020 AI:%d  v:%.04fv\n", g_sys.status.ain[AI_SENSOR1],
+                        (float)(g_sys.status.ain[AI_SENSOR1] * 3.3 * 20.2 / 2.49 / 4095));
+                rt_kprintf("%s", buuff);
+                g_sys.status.ICT.P3 = g_sys.status.ain[AI_SENSOR1] * 3.3 * 20.2 * 100 / 2.49 / 4095;
+                if (abs(g_sys.status.ain[AI_SENSOR1] - 3670) > 125)  // 12V P3
                 {
                     ICT_test |= 0x0020;
                 }
@@ -4659,51 +4735,40 @@ void req_execution(int16_t target_req_temp, int16_t target_req_hum, int16_t targ
 
             if (ICT_test)
             {
-                req_bitmap_op(DO_ALARM_BPOS, 1);
+                // req_bitmap_op(DO_ALARM_BPOS, 1);
                 g_sys.status.ICT.u16Fsm = ICT_ST_ERR;
             }
             else
             {
-                req_bitmap_op(DO_ALARM_BPOS, 0);
+                // req_bitmap_op(DO_ALARM_BPOS, 0);
                 g_sys.status.ICT.u16Fsm = ICT_ST_OK;
             }
 
-            g_sys.status.ICT.u16Test   = ICT_test;
-            g_sys.status.ICT.u16Status = ICT_STOP;
-            rt_kprintf("pa_volt0=%d,pa_volt1=%d,p_cur0=%d,p_cur10=%d,p_cur11=%d,ICT_test=%x\n",
-                       g_sys.status.mbm.pwr[0].pa_volt, g_sys.status.mbm.pwr[1].pa_volt,
-                       g_sys.status.mbm.pwr[0].p_cur[0], g_sys.status.mbm.pwr[1].p_cur[0],
-                       g_sys.status.mbm.pwr[1].p_cur[1], ICT_test);
+            if (ICTStep == 0x003f)
+            {
+                rt_kprintf("ICTStep ICT_test:%04x\n", ICT_test);
+
+                g_sys.status.ICT.u16Test   = ICT_test;
+                g_sys.status.ICT.u16Status = ICT_STOP;
+                req_bitmap_op(DO_HUM_BPOS, 0);    // 1
+                req_bitmap_op(DO_FILL_BPOS, 0);   // 2
+                req_bitmap_op(DO_DRAIN_BPOS, 0);  // 3
+
+                req_bitmap_op(DO_COMP1_BPOS, 0);  // 6
+                req_bitmap_op(DO_FAN_BPOS, 0);    // 7
+                req_bitmap_op(DO_ALARM_BPOS, 0);  // 8
+            }
         }
         break;
         case ICT_STOP: {
             g_sys.status.ICT.u16Status = ICT_IDLE;
             l_sys.u8ICT_PowerKey       = FALSE;
-            req_bitmap_op(DO_POWER_DC5V_BPOS, 0);
-            req_bitmap_op(DO_POWER_AC24V_BPOS, 0);
         }
         break;
         default: {
             g_sys.status.ICT.u16Status = ICT_IDLE;
             l_sys.u8ICT_PowerKey       = FALSE;
-            req_bitmap_op(DO_POWER_DC5V_BPOS, 0);
-            req_bitmap_op(DO_POWER_AC24V_BPOS, 0);
         }
         break;
     }
-    //		rt_kprintf("din_bitmap[0] =%x,din_bitmap[1] =%x,l_sys.u8ICT_PowerKey =%x,u16Status =%x,u16Test
-    //=%x\n",g_sys.status.din_bitmap[0],g_sys.status.din_bitmap[1],l_sys.u8ICT_PowerKey,g_sys.status.ICT.u16Status,g_sys.status.ICT.u16Test);
-    ////    //电源相序切换
-    ////		power_phase_switch();
-    //    //风机控制函数
-    //		fan_req_exe(target_req_temp,target_req_hum,target_req_fan);
-    //    //压缩机与冷冻水控制
-    //		compressor_req_exe(target_req_temp,target_req_hum);
-    //    //电加热控制
-    //		heater_req_exe(target_req_temp,target_req_hum);
-    //    //加湿器控制
-    //		humidifier_req_exe(target_req_hum);
-    //    //除湿控制
-    //		dehumer_req_exe(target_req_temp,target_req_hum);
-    return;
 }

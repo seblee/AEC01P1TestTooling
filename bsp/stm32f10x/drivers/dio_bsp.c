@@ -9,9 +9,9 @@
 #define DIN_MASK_MASK         0x003f
 #define DIN_MASK_MASK1        0xffff //ÆÁ±Î
 #define DIN_POLARITY_MASK     0xffc0
-#define DI_BUF_DEPTH 					600
-#define	DI_UPDATE_PERIOD			1000
-#define SAMPLE_INTERVAL				6
+#define DI_BUF_DEPTH 					50
+#define	DI_UPDATE_PERIOD			100
+#define SAMPLE_INTERVAL				2
 
 #define DIN_WORD2  16	//2¸ö×Ö½Ú
 

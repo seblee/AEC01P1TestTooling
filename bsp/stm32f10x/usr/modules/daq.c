@@ -604,6 +604,7 @@ void ai_sts_update(sys_reg_st *gds_sys_ptr)
     uint16_t u16ADCRemapValue[AI_MAX_CNT];
 
     ain_mask_bitmap = gds_sys_ptr->config.dev_mask.ain;
+
     for (i = 0; i < AI_MAX_CNT_MR; i++)
     {
         //ÖØÓ³Éä
@@ -616,28 +617,32 @@ void ai_sts_update(sys_reg_st *gds_sys_ptr)
     // rt_kprintf("u16ADCRemapValue = %X,R[3] = %X,R[4] = %X,R[5] = %X,R[7] = %X,R[9] =
     // %X,\n",u16ADCRemapValue[2],u16ADCRemapValue[3],u16ADCRemapValue[4],u16ADCRemapValue[5],u16ADCRemapValue[7],u16ADCRemapValue[9]);
 
-    // low_pressure sensor caculation
-    if ((ain_mask_bitmap & (0x0001 << AI_LO_PRESS_SENSOR1)) != 0)
+    for (i = 0; i < AI_SENSOR5; i++)
     {
-        if ((gds_sys_ptr->config.general.cool_type == COOL_TYPE_MODULE_WIND) ||
-            (gds_sys_ptr->config.general.cool_type == COOL_TYPE_COLUMN_WIND))
-            //            gds_sys_ptr->status.ain[AI_LO_PRESS_SENSOR1] =
-            //            calc_hi_press_ai(ADC1ConvertedValue[AI_LO_PRESS_SENSOR1],K_FACTOR_LO_PRESS,gds_sys_ptr->config.general.ai_cali[AI_LO_PRESS_SENSOR1]);
-            gds_sys_ptr->status.ain[AI_LO_PRESS_SENSOR1] =
-                calc_hi_press_ai(u16ADCRemapValue[AI_LO_PRESS_SENSOR1], K_FACTOR_LO_PRESS,
-                                 gds_sys_ptr->config.general.ai_cali[AI_LO_PRESS_SENSOR1]);
-        else
-            gds_sys_ptr->status.ain[AI_LO_PRESS_SENSOR1] = ABNORMAL_VALUE;
-    }
-    // high_pressure sensor caculation
-    if ((ain_mask_bitmap & (0x0001 << AI_HI_PRESS_SENSOR1)) != 0)
-    {
-        //				gds_sys_ptr->status.ain[AI_HI_PRESS_SENSOR1] =
-        // calc_hi_press_ai(ADC1ConvertedValue[AI_HI_PRESS_SENSOR1],K_FACTOR_HI_PRESS,gds_sys_ptr->config.general.ai_cali[AI_HI_PRESS_SENSOR1]);
-        gds_sys_ptr->status.ain[AI_HI_PRESS_SENSOR1] =
-            calc_hi_press_ai(u16ADCRemapValue[AI_HI_PRESS_SENSOR1], K_FACTOR_HI_PRESS,
-                             gds_sys_ptr->config.general.ai_cali[AI_HI_PRESS_SENSOR1]);
-    }
+        gds_sys_ptr->status.ain[i]=ADC1ConvertedValue[i];
+    }    
+//    // low_pressure sensor caculation
+//    if ((ain_mask_bitmap & (0x0001 << AI_LO_PRESS_SENSOR1)) != 0)
+//    {
+//        if ((gds_sys_ptr->config.general.cool_type == COOL_TYPE_MODULE_WIND) ||
+//            (gds_sys_ptr->config.general.cool_type == COOL_TYPE_COLUMN_WIND))
+//            //            gds_sys_ptr->status.ain[AI_LO_PRESS_SENSOR1] =
+//            //            calc_hi_press_ai(ADC1ConvertedValue[AI_LO_PRESS_SENSOR1],K_FACTOR_LO_PRESS,gds_sys_ptr->config.general.ai_cali[AI_LO_PRESS_SENSOR1]);
+//            gds_sys_ptr->status.ain[AI_LO_PRESS_SENSOR1] =
+//                calc_hi_press_ai(u16ADCRemapValue[AI_LO_PRESS_SENSOR1], K_FACTOR_LO_PRESS,
+//                                 gds_sys_ptr->config.general.ai_cali[AI_LO_PRESS_SENSOR1]);
+//        else
+//            gds_sys_ptr->status.ain[AI_LO_PRESS_SENSOR1] = ABNORMAL_VALUE;
+//    }
+//    // high_pressure sensor caculation
+//    if ((ain_mask_bitmap & (0x0001 << AI_HI_PRESS_SENSOR1)) != 0)
+//    {
+//        //				gds_sys_ptr->status.ain[AI_HI_PRESS_SENSOR1] =
+//        // calc_hi_press_ai(ADC1ConvertedValue[AI_HI_PRESS_SENSOR1],K_FACTOR_HI_PRESS,gds_sys_ptr->config.general.ai_cali[AI_HI_PRESS_SENSOR1]);
+//        gds_sys_ptr->status.ain[AI_HI_PRESS_SENSOR1] =
+//            calc_hi_press_ai(u16ADCRemapValue[AI_HI_PRESS_SENSOR1], K_FACTOR_HI_PRESS,
+//                             gds_sys_ptr->config.general.ai_cali[AI_HI_PRESS_SENSOR1]);
+//    }
 
     for (i = AI_NTC1; i < AI_MAX_CNT; i++)
     {
