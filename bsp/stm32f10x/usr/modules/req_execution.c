@@ -4540,6 +4540,7 @@ void req_execution(int16_t target_req_temp, int16_t target_req_hum, int16_t targ
     uint8_t ICT_fsm_state;
     static uint16_t ICT_test = 0;
     static uint16_t ICTStep  = 0;
+    uint8_t lindDelay[2]     = {0};
 
     GetPowerKeyDI();
     if (l_sys.u8ICT_PowerKey == FALSE)  //ио╣Г
@@ -4609,6 +4610,12 @@ void req_execution(int16_t target_req_temp, int16_t target_req_hum, int16_t targ
                 l_sys.u8ICT_Delay--;
                 break;
             }
+
+            if (lindDelay[0])
+            {
+                lindDelay[0]--;
+                goto LINE2;
+            }
             if ((ICTStep & 0x0001) == 0)
             {
                 rt_kprintf("ICTStep & 0x0001 din_bitmap:%04x\n", g_sys.status.din_bitmap[1]);
@@ -4633,6 +4640,7 @@ void req_execution(int16_t target_req_temp, int16_t target_req_hum, int16_t targ
                 }
 
                 ICTStep |= 0x0001;
+                lindDelay[0] = 1;
                 req_bitmap_op(DO_FAN_BPOS, 1);  // 7
                 goto LINE2;
             }
@@ -4658,8 +4666,35 @@ void req_execution(int16_t target_req_temp, int16_t target_req_hum, int16_t targ
                 {
                     g_sys.status.ICT.PG1_PG2 |= 0x0200;
                 }
-
+                req_bitmap_op(DO_FAN_BPOS, 0);  // 7
                 ICTStep |= 0x0002;
+                lindDelay[0] = 1;
+                goto LINE2;
+            }
+
+            if ((ICTStep & 0x0040) == 0)
+            {
+                rt_kprintf("ICTStep & 0x0040 din_bitmap:%04x\n", g_sys.status.din_bitmap[1]);
+                if ((g_sys.status.din_bitmap[1] & 0x04) == 0)
+                {
+                    g_sys.status.ICT.PG1_PG2 &= ~0x0004;
+                    ICT_test |= 0x0001;
+                }
+                else
+                {
+                    g_sys.status.ICT.PG1_PG2 |= 0x0004;
+                }
+
+                if ((g_sys.status.din_bitmap[1] & 0x08) == 0)
+                {
+                    g_sys.status.ICT.PG1_PG2 &= ~0x0400;
+                    ICT_test |= 0x0100;
+                }
+                else
+                {
+                    g_sys.status.ICT.PG1_PG2 |= 0x0400;
+                }
+                ICTStep |= 0x0040;
                 goto LINE2;
             }
         LINE2:
