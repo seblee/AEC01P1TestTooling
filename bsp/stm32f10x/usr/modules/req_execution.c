@@ -4668,7 +4668,7 @@ void req_execution(int16_t target_req_temp, int16_t target_req_hum, int16_t targ
                 }
                 req_bitmap_op(DO_FAN_BPOS, 0);  // 7
                 ICTStep |= 0x0002;
-                lindDelay[0] = 1;
+                lindDelay[0] = 2;
                 goto LINE2;
             }
 
@@ -4678,7 +4678,7 @@ void req_execution(int16_t target_req_temp, int16_t target_req_hum, int16_t targ
                 if ((g_sys.status.din_bitmap[1] & 0x04) == 0)
                 {
                     g_sys.status.ICT.PG1_PG2 &= ~0x0004;
-                    ICT_test |= 0x0001;
+                    ICT_test |= 0x0040;
                 }
                 else
                 {
@@ -4688,7 +4688,7 @@ void req_execution(int16_t target_req_temp, int16_t target_req_hum, int16_t targ
                 if ((g_sys.status.din_bitmap[1] & 0x08) == 0)
                 {
                     g_sys.status.ICT.PG1_PG2 &= ~0x0400;
-                    ICT_test |= 0x0100;
+                    ICT_test |= 0x0080;
                 }
                 else
                 {
@@ -4779,23 +4779,22 @@ void req_execution(int16_t target_req_temp, int16_t target_req_hum, int16_t targ
                 g_sys.status.ICT.u16Fsm = ICT_ST_OK;
             }
 
-            if (ICTStep == 0x003f)
+            if (ICTStep == 0x007f)
             {
                 rt_kprintf("ICTStep ICT_test:%04x\n", ICT_test);
-
                 g_sys.status.ICT.u16Test   = ICT_test;
                 g_sys.status.ICT.u16Status = ICT_STOP;
-                req_bitmap_op(DO_HUM_BPOS, 0);    // 1
-                req_bitmap_op(DO_FILL_BPOS, 0);   // 2
-                req_bitmap_op(DO_DRAIN_BPOS, 0);  // 3
-
-                req_bitmap_op(DO_COMP1_BPOS, 0);  // 6
-                req_bitmap_op(DO_FAN_BPOS, 0);    // 7
-                req_bitmap_op(DO_ALARM_BPOS, 0);  // 8
             }
         }
         break;
         case ICT_STOP: {
+            req_bitmap_op(DO_HUM_BPOS, 0);    // 1
+            req_bitmap_op(DO_FILL_BPOS, 0);   // 2
+            req_bitmap_op(DO_DRAIN_BPOS, 0);  // 3
+
+            req_bitmap_op(DO_COMP1_BPOS, 0);  // 6
+            req_bitmap_op(DO_FAN_BPOS, 0);    // 7
+            req_bitmap_op(DO_ALARM_BPOS, 0);  // 8
             g_sys.status.ICT.u16Status = ICT_IDLE;
             l_sys.u8ICT_PowerKey       = FALSE;
         }
